@@ -1,5 +1,6 @@
 #include <verilated.h>          // Defines common routines
 #include "Vtop.h"               // From Verilating "top.v"
+#include "verilated_vcd_c.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -18,8 +19,10 @@ double sc_time_stamp() {        // Called by $time in Verilog
 
 int main(int argc, char** argv, char** env) {
     Verilated::commandArgs(argc, argv);   // Remember args
+    VerilatedVcdC* tfp = new VerilatedVcdC;
 
     top = new Vtop;             // Create model
+    tfp->open("wave.vcd");
 
     while (!Verilated::gotFinish()) {
         int a = rand() & 1;
@@ -29,10 +32,14 @@ int main(int argc, char** argv, char** env) {
         top->eval();
         assert(top->f == a ^ b);
         printf("a = %d, b = %d, f = %d\n", a, b, top->f);
+
+        tfp->dump(main_time);
+
         main_time++;            // Time passes...
     }
 
     top->final();               // Done simulating
-    //    // (Though this example doesn't get here)
+    tfp->close();
+
     delete top;
 }
