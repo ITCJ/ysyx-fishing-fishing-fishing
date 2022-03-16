@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
+vluint64_t sim_time = 10000;
+
 Vtop *top;                      // Instantiation of model
 
 // vluint64_t main_time = 0;       // Current simulation time
@@ -28,7 +30,7 @@ int main(int argc, char** argv, char** env) {
     // tfp->dumpvars(1, "a"); 
     tfp->open("wave.vcd");
 
-    while (!Verilated::gotFinish()) {
+    while (contextp->time() < sim_time && !Verilated::gotFinish()) {
         contextp->timeInc(1);
 
         int a = rand() & 1;

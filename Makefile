@@ -1,5 +1,6 @@
 STUID = ysyx_22040947
 STUNAME = 唐承捷
+NEMU_HOME = $(shell pwd)
 
 # DO NOT modify the following code!!!
 
