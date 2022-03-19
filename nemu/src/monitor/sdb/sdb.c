@@ -1,5 +1,8 @@
 #include <isa.h>
 #include <cpu/cpu.h>
+#include <cpu/decode.h>
+#include <cpu/difftest.h>
+#include <locale.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
@@ -32,8 +35,9 @@ static int cmd_c(char *args) {
   return 0;
 }
 
-
+// TCJ to fix error when exit
 static int cmd_q(char *args) {
+  nemu_state.state = NEMU_QUIT;
   return -1;
 }
 
