@@ -41,6 +41,22 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+static int cmd_si(char *args) {
+  /* extract the first argument */
+  char *arg = strtok(NULL, " ");
+
+  if (arg == NULL) {
+    /* no argument given */
+    printf("no num given\n");
+    cpu_exec(1);
+  } else {
+    printf( "num=%d\n", atoi(arg) );
+    cpu_exec(atoi(arg));
+  }
+
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -51,6 +67,12 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+  { "si", "Step instruction execute", cmd_si },
+  // { "info", "Information of reg/watch_opint", cmd_info },
+  // { "x", "Scan memory", cmd_x },
+  // { "p", "Express calculate", cmd_p },
+  // { "w", "Set watch point", cmd_w },
+  // { "d", "Delete watch point", cmd_d },
 
   /* TODO: Add more commands */
 
