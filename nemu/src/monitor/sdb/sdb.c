@@ -47,13 +47,28 @@ static int cmd_si(char *args) {
 
   if (arg == NULL) {
     /* no argument given */
-    printf("no num given\n");
+    // printf("no num given\n");
+
     cpu_exec(1);
   } else {
-    printf( "num=%d\n", atoi(arg) );
+    // printf( "num=%d\n", atoi(arg) );
+
     cpu_exec(atoi(arg));
   }
 
+  return 0;
+}
+
+static int cmd_info(char * args) {
+  char *arg = strtok(NULL, " ");
+  
+  if (arg == NULL)  //this is for securaty
+    printf("error arg for info\n");
+  else if (arg[0] == 'r') 
+    isa_reg_display();
+  else if (arg[0] == 'w')
+    printf("print watch point\n");
+  
   return 0;
 }
 
@@ -68,7 +83,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Step instruction execute", cmd_si },
-  // { "info", "Information of reg/watch_opint", cmd_info },
+  { "info", "Information of reg/watch_opint", cmd_info },
   // { "x", "Scan memory", cmd_x },
   // { "p", "Express calculate", cmd_p },
   // { "w", "Set watch point", cmd_w },
