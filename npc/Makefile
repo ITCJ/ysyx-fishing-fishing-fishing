@@ -35,7 +35,7 @@ VERILATOR_FLAGS += --trace
 
 # Input files for Verilator
 # VERILATOR_INPUT = -f ./vsrc/top.v ./csrc/sim_main.cpp
-VERILATOR_INPUT = ./test_our/top.v ./test_our/switch_sim.cpp
+VERILATOR_INPUT = ./switch/top.v ./switch/switch_sim.cpp
 
 ######################################################################
 
