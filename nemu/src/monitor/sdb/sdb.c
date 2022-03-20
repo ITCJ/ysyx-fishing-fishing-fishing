@@ -2,6 +2,7 @@
 #include <cpu/cpu.h>
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
+#include <memory/paddr.h>
 #include <locale.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -72,6 +73,25 @@ static int cmd_info(char * args) {
   return 0;
 }
 
+static int cmd_x(char * args) {
+  char *arg = strtok(NULL, " ");
+
+  if (arg == NULL)
+  {
+    printf("error! no args given\n");
+  } else
+  {
+    for (int i = 0; i < atoi(arg); i++)
+    {
+      // printf(FMT_WORD "\n", paddr_read(0x80000000 + 4*i, 4) );
+      // printf("%08lx\n", strtol(arg+4, NULL, 16)); 0x80000000
+      printf("0x%08lx: %08lx\n", strtol(arg+4, NULL, 16) + 4*i, paddr_read(strtoul(arg+4, NULL, 16) + 4*i, 4) );
+    }
+  }
+  
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -84,7 +104,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Step instruction execute", cmd_si },
   { "info", "Information of reg/watch_opint", cmd_info },
-  // { "x", "Scan memory", cmd_x },
+  { "x", "Scan memory", cmd_x },
   // { "p", "Express calculate", cmd_p },
   // { "w", "Set watch point", cmd_w },
   // { "d", "Delete watch point", cmd_d },
