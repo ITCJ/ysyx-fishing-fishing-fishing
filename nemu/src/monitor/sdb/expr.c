@@ -6,7 +6,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, TK_EQ, TK_NUM
 
   /* TODO: Add more token types */
 
@@ -22,7 +22,18 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
+
+  {"0x[0-9,a-f]*",        },      //hex num
+  {"\\$[0-9,a-z]{1,3}",   },      //reg begin with "$"
+  {"\\(.*\\)",            },      // le ri para
+
   {"\\+", '+'},         // plus
+  {"\\-", '-'},         //sub
+  {"\\*", '*'},         //times
+  {"\\/", '/'},         //div
+  
+  {"[0-9]+", TK_NUM},
+  
   {"==", TK_EQ},        // equal
 };
 
@@ -47,6 +58,7 @@ void init_regex() {
   }
 }
 
+//TCJ 记录token
 typedef struct token {
   int type;
   char str[32];
@@ -55,8 +67,9 @@ typedef struct token {
 static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
+//TCJ make_token 识别token
 static bool make_token(char *e) {
-  int position = 0;
+  int position = 0; //当前处理到的位置
   int i;
   regmatch_t pmatch;
 
@@ -69,7 +82,7 @@ static bool make_token(char *e) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",    //输出成功信息
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
 
         position += substr_len;
@@ -96,7 +109,7 @@ static bool make_token(char *e) {
   return true;
 }
 
-
+//TCJ expr
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;

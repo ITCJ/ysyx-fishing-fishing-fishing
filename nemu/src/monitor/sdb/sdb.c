@@ -92,6 +92,12 @@ static int cmd_x(char * args) {
   return 0;
 }
 
+static int cmd_p(char *args) {
+  //p $eax + 1  求出表达式
+  
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -105,7 +111,7 @@ static struct {
   { "si", "Step instruction execute", cmd_si },
   { "info", "Information of reg/watch_opint", cmd_info },
   { "x", "Scan memory", cmd_x },
-  // { "p", "Express calculate", cmd_p },
+  { "p", "Express calculate", cmd_p },
   // { "w", "Set watch point", cmd_w },
   // { "d", "Delete watch point", cmd_d },
 
