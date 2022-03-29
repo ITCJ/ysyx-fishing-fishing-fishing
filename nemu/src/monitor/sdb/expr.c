@@ -6,9 +6,12 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NUM
+  TK_NOTYPE = 256, TK_EQ, TK_NUM,
 
   /* TODO: Add more token types */
+  TK_HEX, TK_REG, TK_PARE,
+
+  TK_PLUS = '+', TK_MIN = '-', TK_MUL = '*', TK_DIV = '/'
 
 };
 
@@ -21,20 +24,20 @@ static struct rule {
    * Pay attention to the precedence level of different rules.
    */
 
-  {" +", TK_NOTYPE},    // spaces
+  {" +",                  TK_NOTYPE},       // spaces
 
-  {"0x[0-9,a-f]*",        },      //hex num
-  {"\\$[0-9,a-z]{1,3}",   },      //reg begin with "$"
-  {"\\(.*\\)",            },      // le ri para
+  {"0x[0-9,a-f]*",        TK_HEX},          //hex num
+  {"\\$[0-9,a-z]{1,3}",   TK_REG},          //reg begin with "$"
+  {"\\(.*\\)",            TK_PARE},         // le ri pare
 
-  {"\\+", '+'},         // plus
-  {"\\-", '-'},         //sub
-  {"\\*", '*'},         //times
-  {"\\/", '/'},         //div
+  {"\\+",                 '+'},             // plus
+  {"\\-",                 '-'},             //sub
+  {"\\*",                 '*'},             //mul
+  {"\\/",                 '/'},             //div
   
-  {"[0-9]+", TK_NUM},
+  {"[0-9]+",              TK_NUM},
   
-  {"==", TK_EQ},        // equal
+  {"==",                  TK_EQ},           // equal
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -91,10 +94,30 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
+        assert(rules[i].token_type);
+        printf("%d--%d\n", nr_token, rules[i].token_type);
         switch (rules[i].token_type) {
+          case TK_NOTYPE:
+          case TK_PARE:
+          case '+':
+          case '-':
+          case '*':
+          case '/':
+          case TK_EQ:
+            tokens[nr_token].type = rules[i].token_type;
+          break;
+          
+          case TK_HEX:
+          case TK_REG:
+          case TK_NUM:
+            strncpy(tokens[nr_token].str, substr_start,substr_len );
+            tokens[nr_token].type = rules[i].token_type;
+          break;
+
           default: TODO();
         }
+        
+        nr_token ++;
 
         break;
       }

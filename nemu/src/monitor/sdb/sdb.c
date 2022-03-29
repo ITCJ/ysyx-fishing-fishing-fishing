@@ -94,8 +94,12 @@ static int cmd_x(char * args) {
 
 static int cmd_p(char *args) {
   //p $eax + 1  求出表达式
-  
-  return 0;
+  // char *arg = strtok(NULL, " ");
+
+  bool success;
+  bool *isSuccess = &success;
+  expr(args + 0, isSuccess);
+  return success;
 }
 
 static int cmd_help(char *args);
