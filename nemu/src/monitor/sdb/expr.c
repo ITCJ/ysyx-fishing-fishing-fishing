@@ -9,7 +9,7 @@ enum {
   TK_NOTYPE = 256, TK_EQ, TK_NUM,
 
   /* TODO: Add more token types */
-  TK_HEX, TK_REG, TK_PARE,
+  TK_HEX, TK_REG, TK_LPARE = '(', TK_RPARE = ')',
 
   TK_PLUS = '+', TK_MIN = '-', TK_MUL = '*', TK_DIV = '/'
 
@@ -28,7 +28,8 @@ static struct rule {
 
   {"0x[0-9,a-f]*",        TK_HEX},          //hex num
   {"\\$[0-9,a-z]{1,3}",   TK_REG},          //reg begin with "$"
-  {"\\(.*\\)",            TK_PARE},         // le ri pare
+  {"\\(+",                '('},         // le ri pare
+  {"\\)+",                ')'},         // le ri pare
 
   {"\\+",                 '+'},             // plus
   {"\\-",                 '-'},             //sub
@@ -98,7 +99,8 @@ static bool make_token(char *e) {
         printf("%d--%d\n", nr_token, rules[i].token_type);
         switch (rules[i].token_type) {
           case TK_NOTYPE:
-          case TK_PARE:
+          case TK_LPARE:
+          case TK_RPARE:
           case '+':
           case '-':
           case '*':
@@ -132,6 +134,34 @@ static bool make_token(char *e) {
   return true;
 }
 
+bool check_parentheses(p, q) {
+
+  
+}
+
+word_t eval(int p, int q) {
+  if (p > q) {
+    return -1;
+  }
+  else if (p == q) {
+    /* Single token.
+     * For now this token should be a number.
+     * Return the value of the number.
+     */
+    return atoi(tokens[0].str);
+  }
+  else if (check_parentheses(p, q) == true) {
+    /* The expression is surrounded by a matched pair of parentheses.
+     * If that is the case, just throw away the parentheses.
+     */
+    return eval(p + 1, q - 1);
+  }
+  else {
+    /* We should do more things here. */
+  }
+  return -1;
+}
+
 //TCJ expr
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -140,7 +170,11 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  int p = 0;
+  int q = nr_token - 1;
+  printf("%s\n", e + q + p);  //+p 只是调试时为了避免错误
+  eval();
+
 
   return 0;
 }
